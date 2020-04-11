@@ -1,0 +1,24 @@
+language: node_js
+node_js:
+    - "12"
+
+#trusty is a linux based os vm
+dist: trusty 
+services:
+    - mongodb
+    - redis-server
+env:
+    - NODE_ENV=ci
+    - PORT=3000
+cache: 
+    directories:
+        - node_modules
+        - client/node_modules
+install:
+    - npm install
+    - yarn run build 
+    
+script:
+    - nohup yarn run start & 
+    - sleep 3 #give server time to run
+    - yarn run test

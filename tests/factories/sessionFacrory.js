@@ -1,0 +1,16 @@
+const Keygrip = require('keygrip');
+const keys = require('../../config/keys');
+const keygrip = new Keygrip([ keys.cookieKey ]);
+
+module.exports = (user) => {
+	const buffer = require('safe-buffer').Buffer;
+	const sessionObj = {
+		passport: {
+			user: user._id.toString()
+		}
+	};
+
+	const sessionString = buffer.from(JSON.stringify(sessionObj)).toString('base64');
+	const sig = keygrip.sign('session=' + sessionString);
+	return { session: sessionString, sig: sig };
+};
